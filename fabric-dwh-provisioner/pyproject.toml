@@ -1,0 +1,76 @@
+[tool.poetry]
+name = "specific-provisioner"
+version = "0.1.0"
+description = ""
+authors = ["Agile Lab"]
+readme = "README.md"
+packages = [{include = "src"}]
+
+[tool.poetry.dependencies]
+python = "~3.11"
+pytest = "^8.2.1"
+pytest-asyncio = "^0.23.7"
+mypy = "^1.1.1"
+fastapi = {extras = ["all"], version = "^0.111.0"}
+pre-commit = "^3.1.1"
+ruff = "^0.4.5"
+opentelemetry-distro = "^0.45b0"
+opentelemetry-instrumentation-fastapi = "^0.45b0"
+opentelemetry-exporter-otlp-proto-grpc = "^1.24.0"
+opentelemetry-exporter-otlp = "^1.24.0"
+pip-audit = "^2.5.3"
+pytest-cov = "^5.0.0"
+pyyaml = "^6.0"
+types-pyyaml = "^6.0"
+types-requests = "^2.32.0"
+urllib3 = "^2.2.2"
+pyodbc = "^5.2.0"
+azure-identity = "^1.19.0"
+
+[tool.ruff]
+select = ["E", "F", "I"]
+line-length = 120
+
+[tool.pytest.ini_options]
+addopts = "-v"
+
+[tool.coverage.report]
+fail_under = 90
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.liccheck]
+authorized_licenses = [
+    'apache license 2.0',
+    'apache-2.0',
+    'apache software',
+    'bsd',
+    'cc0 1.0 universal (cc0 1.0) public domain dedication',
+    'gnu lesser general public license v2 or later (lgplv2+)',
+    'isc',
+    'isc license (iscl)',
+    'mit',
+    'mozilla public license 2.0 (mpl 2.0)',
+    'other/proprietary',
+    'python software foundation',
+    'the unlicense (unlicense)',
+    '3-clause bsd',
+    'mit',
+    'MIT License',
+    'mozilla public license 2.0 (mpl 2.0)',
+    'other/proprietary',
+    'python software foundation',
+    'the unlicense (unlicense)',
+    '3-clause bsd',
+    'BSD-2-Clause'
+]
+unauthorized_licenses = [
+    "gnu general public license v2 (gplv2)"
+]
+
+
+# pytest
+[pytest]
+asyncio_mode = "auto"
