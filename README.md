@@ -152,10 +152,9 @@ This project supports authentication using `DefaultAzureCredential` provided by 
 Managed Identity is the simplest and most secure option for authenticating when the application is hosted in Azure services like Azure Kubernetes Service (AKS), Azure App Service, or Virtual Machines. 
 
 #### Environment Variables
-| Variable            | Description                                                                                     
-|---------------------|-------------------------------------------------------------------------------------------------|----------|
-| `AZURE_CLIENT_ID`   | (Optional) Client ID of the user-assigned Managed Identity to use. If not set, system-assigned Managed Identity is used. 
-
+| Variable            | Description                                                                                     |
+|---------------------|-------------------------------------------------------------------------------------------------|
+| `AZURE_CLIENT_ID`   | (Optional) Client ID of the user-assigned Managed Identity to use. If not set, system-assigned Managed Identity is used. |
 
 ---
 
@@ -164,14 +163,13 @@ Managed Identity is the simplest and most secure option for authenticating when 
 Azure AD App Registration is ideal for scenarios where Managed Identity is not available. You'll need to register an application in Azure Active Directory and provide the necessary credentials.
 
 #### Environment Variables
+| Variable            | Description                                                                                     |
+|---------------------|-------------------------------------------------------------------------------------------------|
+| `AZURE_CLIENT_ID`   | The Client ID of the Azure AD application (App Registration).                                   |
+| `AZURE_CLIENT_SECRET` | The Client Secret of the Azure AD application.                                                |
+| `AZURE_TENANT_ID`   | The Tenant ID of your Azure Active Directory.                                                   |
 
-| Variable            | Description                                                                                     
-|---------------------|-------------------------------------------------------------------------------------------------|----------|
-| `AZURE_CLIENT_ID`   | The Client ID of the Azure AD application (App Registration).                                   
-| `AZURE_CLIENT_SECRET` | The Client Secret of the Azure AD application.                                                
-| `AZURE_TENANT_ID`   | The Tenant ID of your Azure Active Directory.                                                   
-
-
+---
 ## Deploying
 
 This microservice is meant to be deployed to a Kubernetes cluster with the included Helm chart and the scripts that can be found in the `helm` subdirectory. You can find more details [here](helm/README.md).
