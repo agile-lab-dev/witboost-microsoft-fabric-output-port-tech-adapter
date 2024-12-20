@@ -8,7 +8,7 @@ Designed by [Agile Lab](https://www.agilelab.it/), Witboost is a versatile platf
 
 This repository is part of our [Starter Kit](https://github.com/agile-lab-dev/witboost-starter-kit) meant to showcase Witboost integration capabilities and provide a "batteries-included" product.
 
-# Python Scaffold
+# Fabric Dwh Provisioner 
 
 - [Overview](#overview)
 - [Building](#building)
@@ -152,9 +152,9 @@ This project supports authentication using `DefaultAzureCredential` provided by 
 Managed Identity is the simplest and most secure option for authenticating when the application is hosted in Azure services like Azure Kubernetes Service (AKS), Azure App Service, or Virtual Machines. 
 
 #### Environment Variables
-| Variable            | Description                                                                                     | Required |
+| Variable            | Description                                                                                     
 |---------------------|-------------------------------------------------------------------------------------------------|----------|
-| `AZURE_CLIENT_ID`   | (Optional) Client ID of the user-assigned Managed Identity to use. If not set, system-assigned Managed Identity is used. | No       |
+| `AZURE_CLIENT_ID`   | (Optional) Client ID of the user-assigned Managed Identity to use. If not set, system-assigned Managed Identity is used. 
 
 
 ---
@@ -165,11 +165,11 @@ Azure AD App Registration is ideal for scenarios where Managed Identity is not a
 
 #### Environment Variables
 
-| Variable            | Description                                                                                     | Required |
+| Variable            | Description                                                                                     
 |---------------------|-------------------------------------------------------------------------------------------------|----------|
-| `AZURE_CLIENT_ID`   | The Client ID of the Azure AD application (App Registration).                                   | Yes      |
-| `AZURE_CLIENT_SECRET` | The Client Secret of the Azure AD application.                                                | Yes      |
-| `AZURE_TENANT_ID`   | The Tenant ID of your Azure Active Directory.                                                   | Yes      |
+| `AZURE_CLIENT_ID`   | The Client ID of the Azure AD application (App Registration).                                   
+| `AZURE_CLIENT_SECRET` | The Client Secret of the Azure AD application.                                                
+| `AZURE_TENANT_ID`   | The Tenant ID of your Azure Active Directory.                                                   
 
 
 ## Deploying
