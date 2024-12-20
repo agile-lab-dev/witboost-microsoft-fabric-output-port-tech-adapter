@@ -19,7 +19,7 @@ This repository is part of our [Starter Kit](https://github.com/agile-lab-dev/wi
 
 ## Overview
 
-This project provides a scaffold to develop a Specific Provisioner from scratch using Python & FastAPI.
+This Python microservice implements the Witboost Specific Provisioner interface for Data Warehouse Output Ports based on Fabric DWH. It provides seamless integration with Fabric DWH to support data ingestion, transformation, and retrieval operations.
 
 ### What's a Specific Provisioner?
 
