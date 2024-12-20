@@ -10,7 +10,7 @@ class AzureFabricApiService:
         Autentication Initialize with Azure ADD
         """
         # If u wanto to try this in local use InteractiveBrowserCredential
-        self.credential = InteractiveBrowserCredential()
+        self.credential = DefaultAzureCredential()
         self.token = self.credential.get_token("https://graph.microsoft.com/.default").token
         self.headers = {"Authorization": f"Bearer {self.token}"}
 

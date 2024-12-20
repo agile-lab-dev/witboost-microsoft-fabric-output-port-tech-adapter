@@ -14,7 +14,7 @@ class FabricService:
         Initialize the FabricService with optional Azure credentials.
         """
         # If u wanto to try this in local use InteractiveBrowserCredential
-        self.credential = InteractiveBrowserCredential()
+        self.credential = DefaultAzureCredential()
         self.workspace_name = None
         self.dwh_name = None
         self.connection = None

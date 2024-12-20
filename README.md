@@ -70,7 +70,7 @@ If you do have Python 3 installed, but not version 3.11 required by this project
 
 ```shell
 pyenv install 3.11
-cd specific-provisioner
+cd fabric-dwh-provisioner
 pyenv local 3.11
 ```
 
@@ -93,7 +93,7 @@ If you see something like `Poetry (version x.x.x)`, your installation is ready t
 Install the dependencies defined in `specific-provisioner/pyproject.toml`:
 
 ```shell
-cd specific-provisioner
+cd fabric-dwh-provisioner
 poetry env use 3.11
 poetry install
 ```
@@ -141,6 +141,36 @@ uvicorn src.main:app --host 127.0.0.1 --port 8091
 ```
 
 By default, the server binds to port 8091 on localhost. After it's up and running you can make provisioning requests to this address. You can also check the API documentation served [here](http://127.0.0.1:8091/docs).
+
+## Configuring using DefaultAzureCredential
+This project supports authentication using `DefaultAzureCredential` provided by the Azure SDK. Below are two approaches to configure authentication depending on your environment: **Managed Identity** or **Azure AD App Registration**.
+
+---
+
+### 1. Managed Identity (Recommended for Azure-hosted environments)
+
+Managed Identity is the simplest and most secure option for authenticating when the application is hosted in Azure services like Azure Kubernetes Service (AKS), Azure App Service, or Virtual Machines. 
+
+#### Environment Variables
+| Variable            | Description                                                                                     | Required |
+|---------------------|-------------------------------------------------------------------------------------------------|----------|
+| `AZURE_CLIENT_ID`   | (Optional) Client ID of the user-assigned Managed Identity to use. If not set, system-assigned Managed Identity is used. | No       |
+
+
+---
+
+### 2. Azure AD App Registration (For hybrid or non-Azure environments)
+
+Azure AD App Registration is ideal for scenarios where Managed Identity is not available. You'll need to register an application in Azure Active Directory and provide the necessary credentials.
+
+#### Environment Variables
+
+| Variable            | Description                                                                                     | Required |
+|---------------------|-------------------------------------------------------------------------------------------------|----------|
+| `AZURE_CLIENT_ID`   | The Client ID of the Azure AD application (App Registration).                                   | Yes      |
+| `AZURE_CLIENT_SECRET` | The Client Secret of the Azure AD application.                                                | Yes      |
+| `AZURE_TENANT_ID`   | The Tenant ID of your Azure Active Directory.                                                   | Yes      |
+
 
 ## Deploying
 
