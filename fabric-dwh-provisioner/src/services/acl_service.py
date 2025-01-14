@@ -10,7 +10,7 @@ class AzureFabricApiService:
         Autentication Initialize with Azure ADD
         """
         # If u wanto to try this in local use InteractiveBrowserCredential
-        self.credential = DefaultAzureCredential()
+        self.credential = InteractiveBrowserCredential()
         self.token = self.credential.get_token("https://graph.microsoft.com/.default").token
         self.headers = {"Authorization": f"Bearer {self.token}"}
 
@@ -37,6 +37,28 @@ class AzureFabricApiService:
             print(f"Error fetching group ID: {e}")
             raise
 
+    def get_group_id_lk(self, group_name):
+        """
+        Retrieve the ID of a group from its display name using Microsoft Graph API.
+        :param group_name: The display name of the group.
+        :param headers: Headers containing the authorization token.
+        :return: The group ID.
+        """
+        try:
+            graph_endpoint = f"https://graph.microsoft.com/v1.0/groups?$filter=displayName eq '{group_name}'"
+            response = requests.get(graph_endpoint, headers=self.headers)
+            if response.status_code != 200:
+                raise Exception(f"Failed to fetch group ID for '{group_name}': {response.text}")
+
+            groups = response.json().get("value", [])
+            if not groups:
+                raise ValueError(f"Group '{group_name}' not found.")
+
+            return groups[0]["id"]
+        except Exception as e:
+            print(f"Error fetching group ID: {e}")
+            raise
+
     def get_user_id(self, user_name, headers):
         """
         Retrieve the ID of a user from its user principal name (email) using Microsoft Graph API.
@@ -47,6 +69,28 @@ class AzureFabricApiService:
         try:
             graph_endpoint = f"https://graph.microsoft.com/v1.0/users?$filter=userPrincipalName eq '{user_name}'"
             response = requests.get(graph_endpoint, headers=headers)
+            if response.status_code != 200:
+                raise Exception(f"Failed to fetch user ID for '{user_name}': {response.text}")
+
+            users = response.json().get("value", [])
+            if not users:
+                raise ValueError(f"User '{user_name}' not found.")
+
+            return users[0]["id"]
+        except Exception as e:
+            print(f"Error fetching user ID: {e}")
+            raise
+
+    def get_user_id_lk(self, user_name):
+        """
+        Retrieve the ID of a user from its user principal name (email) using Microsoft Graph API.
+        :param user_name: The user principal name (email) of the user.
+        :param headers: Headers containing the authorization token.
+        :return: The user ID.
+        """
+        try:
+            graph_endpoint = f"https://graph.microsoft.com/v1.0/users?$filter=userPrincipalName eq '{user_name}'"
+            response = requests.get(graph_endpoint, headers=self.headers)
             if response.status_code != 200:
                 raise Exception(f"Failed to fetch user ID for '{user_name}': {response.text}")
 
@@ -122,3 +166,4 @@ class AzureFabricApiService:
             print(f"Error updating ACL: {e}")
             raise
 
+   

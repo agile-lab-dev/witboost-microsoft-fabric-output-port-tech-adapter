@@ -22,7 +22,7 @@ from src.models.api_models import (
     Status1
 )
 from src.utility.logger import get_logger
-from src.models.data_product_descriptor import FabricDWHOutputPort
+from src.models.data_product_descriptor import FabricOutputPort, SinkKind
 
 logger = get_logger()
 
@@ -45,27 +45,44 @@ def provision(request: UnpackedProvisioningRequestDep,fabricService: FabricServi
 
     if isinstance(request, ValidationError):
         return check_response(out_response=request)
-
+    
 # Var to SnakeCase
     data_product, component_id = request
     logger.info("Provisioning component with id: " + component_id)
-    componentToProvision = data_product.get_typed_component_by_id(component_id, FabricDWHOutputPort)
+    componentToProvision = data_product.get_typed_component_by_id(component_id, FabricOutputPort)
     dc_table_name = componentToProvision.specific.table
     dc_schema_ = componentToProvision.dataContract.schema_
-    sql_schema = schemaService.generate_sql_schema(schema = dc_schema_, nullable = True)
+    sink = componentToProvision.specific.sink
+    file_path = componentToProvision.specific.file_path
     dev_group = "group:" + data_product.devGroup
-    fabricService.get_sql_endpoint(componentToProvision.specific.workspace,componentToProvision.specific.warehouse)
+    if sink == SinkKind.DWH:
+        sql_schema = schemaService.generate_sql_schema(schema = dc_schema_, nullable = True)
+        try:
+            fabricService.get_sql_endpoint(workspace=componentToProvision.specific.workspace, dwh=componentToProvision.specific.warehouse)        
+            if fabricService.create_table(table_name=dc_table_name, schema=sql_schema) == True:
+                fabricService.apply_acl_to_dwh_table(azureServiceapi.update_acl([dev_group]),dc_table_name,True)
+                resp = ProvisioningStatus(status=Status1.COMPLETED,result="Provisioning completed")
+            else:
+                resp = ProvisioningStatus(status=Status1.FAILED,result="Provisioning not completed")
+        except Exception as e:
+            resp = SystemErr(error=f'Provisioning not completed, the error is: {e}' )
+        return check_response(out_response=resp)
+    elif sink == SinkKind.LAKEHOUSE:
+        try:
+            # if fabricService.load_table(workspace_id=componentToProvision.specific.workspace, 
+            #                             relative_path=file_path, 
+            #                             lakehouse_id=componentToProvision.specific.warehouse, 
+            #                             table_name=dc_table_name,
+            #                             file_format= componentToProvision.specific.fileFormat):
+            if 1 == 1:
+               fabricService.apply_acl_to_lakehouse_table(componentToProvision.specific.workspace,componentToProvision.specific.warehouse, azureServiceapi.get_user_id_lk('lorenzo.pirazzini@agilelab.it'),dc_table_name,True)
+               resp = ProvisioningStatus(status=Status1.COMPLETED,result="Provisioning completed" )
+            else:
+                resp = ProvisioningStatus(status=Status1.FAILED,result="Provisioning not completed") 
+        except Exception as e:
+            resp = SystemErr(error=f'Provisioning not completed, the error is: {e}' )
 
-    
-    try:
-        if fabricService.create_table(table_name=dc_table_name, schema=sql_schema) == True:
-            fabricService.apply_acl_to_table(azureServiceapi.update_acl([dev_group]),dc_table_name,True)
-            resp = ProvisioningStatus(status=Status1.COMPLETED,result="Provisioning completed")
-        else:
-            resp = ProvisioningStatus(status=Status1.FAILED,result="Provisioning not completed")
-    except Exception as e:
-        resp = SystemErr(error=f'Response {e}' )
-    return check_response(out_response=resp)
+        return check_response(out_response=resp)
 
 
 @app.get(
@@ -112,7 +129,7 @@ def unprovision(request: UnpackedUnprovisioningRequestDep, fabricService: Fabric
     data_product, component_id, remove_data = request
 
     logger.info("Unprovisioning component with id: " + component_id)
-    componentToUnprovision = data_product.get_typed_component_by_id(component_id, FabricDWHOutputPort)
+    componentToUnprovision = data_product.get_typed_component_by_id(component_id, FabricOutputPort)
     fabricService.get_sql_endpoint(componentToUnprovision.specific.workspace,componentToUnprovision.specific.warehouse)
     try:
         if fabricService.drop_table(componentToUnprovision.specific.table) == True:
@@ -146,11 +163,11 @@ def updateacl(request: UnpackedUpdateAclRequestDep, fabricService: FabricService
         return check_response(out_response=request)
 
     data_product, component_id, witboost_users = request
-    componentToProvision = data_product.get_typed_component_by_id(component_id, FabricDWHOutputPort)
+    componentToProvision = data_product.get_typed_component_by_id(component_id, FabricOutputPort)
     fabricService.get_sql_endpoint(componentToProvision.specific.workspace,componentToProvision.specific.warehouse)
 
     try:
-        if fabricService.apply_acl_to_table(acl_entries=azureServiceapi.update_acl(witboost_users),table_name= componentToProvision.specific.table) == True:
+        if fabricService.apply_acl_to_dwh_table(acl_entries=azureServiceapi.update_acl(witboost_users),table_name= componentToProvision.specific.table) == True:
             resp = ProvisioningStatus(status=Status1.COMPLETED,result="Acl updated")
         else:
             resp = ProvisioningStatus(status=Status1.FAILED, result="Acl not updated")

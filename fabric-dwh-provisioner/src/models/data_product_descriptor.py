@@ -151,13 +151,20 @@ class OutputPort(Component):
                 f"kind of component with id {values.get('id')} must be 'outputport'"  # noqa: E501
             )
 
-class FabricDWHOutputPortSpecific(BaseModel):
+class SinkKind(StrEnum):
+    DWH = "datawarehouse"
+    LAKEHOUSE = "lakehouse"
+
+class FabricOutputPortSpecific(BaseModel):
     workspace: str
     warehouse: str
     table: str
+    sink: SinkKind
+    file_path: str | None
+    fileFormat: str
 
-class FabricDWHOutputPort(OutputPort):
-    specific: FabricDWHOutputPortSpecific
+class FabricOutputPort(OutputPort):
+    specific: FabricOutputPortSpecific
 
 
 
