@@ -69,8 +69,8 @@ compliance:
   image: python:3.11
   before_script:
     - python --version
-    - pip install poetry liccheck
-    - cd specific-provisioner
+    - pip install poetry==1.8.5 liccheck
+    - cd fabric-dwh-provisioner
     - poetry install
   script:
     - poetry export --without-hashes --format=requirements.txt > requirements.txt
@@ -81,15 +81,15 @@ compliance:
   artifacts:
    when: always
    paths:
-    - specific-provisioner/vulnerabilities.json
+    - fabric-dwh-provisioner/vulnerabilities.json
 
 linter:
   stage: test
   image: python:3.11
   before_script:
     - python --version
-    - pip install poetry
-    - cd specific-provisioner
+    - pip install poetry==1.8.5
+    - cd fabric-dwh-provisioner
     - poetry install
   script:
     - poetry run ruff check .
@@ -109,8 +109,8 @@ type_checks:
   image: python:3.11
   before_script:
     - python --version
-    - pip install poetry
-    - cd specific-provisioner
+    - pip install poetry==1.8.5
+    - cd fabric-dwh-provisioner
     - poetry install
   script:
     - poetry run mypy .
@@ -119,9 +119,10 @@ run_tests:
   stage: test
   image: python:3.11
   before_script:
+    - apt-get update && apt-get install -y --no-install-recommends unixodbc
     - python --version
-    - pip install poetry
-    - cd specific-provisioner
+    - pip install poetry==1.8.5
+    - cd fabric-dwh-provisioner
     - poetry install
   script:
     - poetry run pytest --cov=src/ tests/. --cov-report=xml
@@ -130,21 +131,21 @@ run_tests:
     reports:
       coverage_report:
         coverage_format: cobertura
-        path: specific-provisioner/coverage.xml
+        path: fabric-dwh-provisioner/coverage.xml
 
 poetry_build:
   stage: build
   image: python:3.11
   before_script:
     - python --version
-    - pip install poetry
-    - cd specific-provisioner
+    - pip install poetry==1.8.5
+    - cd fabric-dwh-provisioner
     - poetry install
   script:
     - poetry build
   artifacts:
     paths:
-      - specific-provisioner/dist
+      - fabric-dwh-provisioner/dist
 
 common_build:
   stage: build
@@ -165,7 +166,7 @@ docker_build:
   services:
     - docker:23.0.0-dind
   script:
-    - cd specific-provisioner
+    - cd fabric-dwh-provisioner
     - export COMPOSE_DOCKER_CLI_BUILD=1
     - export DOCKER_BUILDKIT=1
     - echo VERSION=${VERSION}
@@ -184,7 +185,7 @@ push_build:
     - set +x
     - ls -al
     - echo VERSION=${VERSION}
-    - cp specific-provisioner/dist/*.whl build-${VERSION}.whl
+    - cp fabric-dwh-provisioner/dist/*.whl build-${VERSION}.whl
     - export NAME_WHEEL=$(basename *.whl)
     - ls -al
     - echo ${NAME_WHEEL}
@@ -204,7 +205,7 @@ container_scanning:
   stage: build
   variables:
     GIT_STRATEGY: fetch
-    CS_DOCKERFILE_PATH: specific-provisioner/
+    CS_DOCKERFILE_PATH: fabric-dwh-provisioner/
     CS_IMAGE: $CI_REGISTRY_IMAGE:$VERSION
   script:
     - 'echo Version: $VERSION'

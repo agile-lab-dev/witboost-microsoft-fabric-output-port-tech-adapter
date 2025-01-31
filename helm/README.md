@@ -1,4 +1,4 @@
-# python-specific-provisioner
+# fabric-dwh-specific-provisioner
 
 ![Version: 0.0.1](https://img.shields.io/badge/Version-0.0.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.0.1](https://img.shields.io/badge/AppVersion-0.0.1-informational?style=flat-square)
 
@@ -15,9 +15,8 @@ A Helm chart for Kubernetes
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | dockerRegistrySecretName | string | `"regcred"` | Docker Registry Secret name used to access a private repo |
-| extraEnvVars | list | `[]` | define extra variables to add to the container(s) e.g: extraEnvVars:   - name: FOO     value: "10" |
 | image.pullPolicy | string | `"Always"` | The imagePullPolicy for a container and the tag of the image affect when the kubelet attempts to pull (download) the specified image. |
-| image.registry | string | `"registry.gitlab.com/agilefactory/witboost.mesh/provisioning/witboost.mesh.provisioning.pythonspecificprovisioner"` | Image repository |
+| image.registry | string | `"registry.gitlab.com/agilefactory/witboost.mesh/provisioning/fabric/witboost.mesh.provisioning.outputport.fabric.onelake"` | Image repository |
 | image.tag | string | `"latest"` | Image tag |
 | labels | object | `{}` | Allows you to specify common labels |
 | livenessProbe | object | `{}` | liveness probe spec |

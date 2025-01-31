@@ -1,6 +1,6 @@
 from datetime import datetime
 from enum import StrEnum
-from typing import Annotated, List, Literal, Optional, Type
+from typing import Annotated, Any, List, Literal, Optional, Type
 
 from pydantic import (
     AnyUrl,
@@ -117,7 +117,7 @@ class Component(BaseModel):
     name: str
     fullyQualifiedName: Optional[str] = None
     description: str
-    specific: dict
+    specific: Any
 
 
 class OutputPort(Component):
@@ -151,9 +151,11 @@ class OutputPort(Component):
                 f"kind of component with id {values.get('id')} must be 'outputport'"  # noqa: E501
             )
 
+
 class SinkKind(StrEnum):
     DWH = "datawarehouse"
     LAKEHOUSE = "lakehouse"
+
 
 class FabricOutputPortSpecific(BaseModel):
     workspace: str
@@ -163,9 +165,9 @@ class FabricOutputPortSpecific(BaseModel):
     file_path: str | None
     fileFormat: str
 
+
 class FabricOutputPort(OutputPort):
     specific: FabricOutputPortSpecific
-
 
 
 class Workload(Component):

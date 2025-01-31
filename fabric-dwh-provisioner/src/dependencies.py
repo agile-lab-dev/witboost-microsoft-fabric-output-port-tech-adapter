@@ -1,6 +1,5 @@
 from typing import Annotated, Tuple
 
-
 import yaml
 from fastapi import Depends
 
@@ -11,13 +10,12 @@ from src.models.api_models import (
     ValidationError,
 )
 from src.models.data_product_descriptor import DataProduct
+from src.services.acl_service import AzureFabricApiService
+from src.services.fabric_service import FabricService
+from src.services.schema_service import SQLSchemaMapper
 from src.utility.logger import get_logger
 from src.utility.parsing_pydantic_models import parse_yaml_with_model
-from src.services.fabric_service import FabricService
-from src.services.acl_service import AzureFabricApiService
-from src.services.schema_service import SQLSchemaMapper
 
-from src.utility.configuration_manager import ConfigurationManager
 logger = get_logger()
 
 
@@ -187,15 +185,15 @@ UnpackedUpdateAclRequestDep = Annotated[
 # def create_configuration_manager() -> ConfigurationManager:
 #     return ConfigurationManager("ConnectToFabricDwh")
 
+
 def create_fabric_service() -> FabricService:
     """
     Factory to create a FabricService instance.
     """
-    #return FabricService(connection_string="kdt6p3u7fghunjwdt4ujep3bgm-mdbd4ji22u6e3jsucvnwmxoaye.datawarehouse.fabric.microsoft.com", dwh_name="Test_DWH")
     return FabricService()
 
-FabricServiceDep = Annotated[FabricService , Depends(create_fabric_service)]
 
+FabricServiceDep = Annotated[FabricService, Depends(create_fabric_service)]
 
 
 def create_schema_service() -> SQLSchemaMapper:
@@ -204,7 +202,9 @@ def create_schema_service() -> SQLSchemaMapper:
     """
     return SQLSchemaMapper()
 
-SQLSchemaMapperDep = Annotated[SQLSchemaMapper,Depends(create_schema_service)]
+
+SQLSchemaMapperDep = Annotated[SQLSchemaMapper, Depends(create_schema_service)]
+
 
 def create_azure_service() -> AzureFabricApiService:
     """
@@ -212,5 +212,5 @@ def create_azure_service() -> AzureFabricApiService:
     """
     return AzureFabricApiService()
 
-AzureFabricServiceDep = Annotated[AzureFabricApiService , Depends(create_azure_service)]
 
+AzureFabricServiceDep = Annotated[AzureFabricApiService, Depends(create_azure_service)]

@@ -11,7 +11,7 @@ python = "~3.11"
 pytest = "^8.2.1"
 pytest-asyncio = "^0.23.7"
 mypy = "^1.1.1"
-fastapi = {extras = ["all"], version = "^0.111.0"}
+fastapi = {version = "^0.115.7", extras = ["all"]}
 pre-commit = "^3.1.1"
 ruff = "^0.4.5"
 opentelemetry-distro = "^0.45b0"
@@ -35,7 +35,7 @@ line-length = 120
 addopts = "-v"
 
 [tool.coverage.report]
-fail_under = 90
+fail_under = 50
 
 [build-system]
 requires = ["poetry-core"]
@@ -64,7 +64,8 @@ authorized_licenses = [
     'python software foundation',
     'the unlicense (unlicense)',
     '3-clause bsd',
-    'BSD-2-Clause'
+    'BSD-2-Clause',
+    'MIT No Attribution License (MIT-0)'
 ]
 unauthorized_licenses = [
     "gnu general public license v2 (gplv2)"

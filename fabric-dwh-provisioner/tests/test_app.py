@@ -49,11 +49,6 @@ client = TestClient(app2)
 
 class testApp(unittest.TestCase):
     def test_fun1_valid_input_200(self):
-        import pydantic
-
-        print(pydantic.__file__)
-        print(pydantic.__version__)
-
         response = client.post("/v1/test", json={"val": 1})
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.text, "1")

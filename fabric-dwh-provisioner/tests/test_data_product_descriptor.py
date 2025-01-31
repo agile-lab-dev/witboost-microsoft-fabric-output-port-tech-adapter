@@ -470,17 +470,28 @@ class TestDataProductDescriptor(unittest.TestCase):
         )
 
     def test_get_typed_component_output_port(self):
-        descriptor_str = Path("tests/descriptors/descriptor_output_port_valid.yaml").read_text()
+        descriptor_str = Path(
+            "tests/descriptors/descriptor_output_port_valid.yaml"
+        ).read_text()
         request = yaml.safe_load(descriptor_str)
         data_product = parse_yaml_with_model(request.get("dataProduct"), DataProduct)
         component_to_provision = request.get("componentIdToProvision")
 
-        assert data_product.get_typed_component_by_id(component_to_provision, OutputPort) is not None
+        assert (
+            data_product.get_typed_component_by_id(component_to_provision, OutputPort)
+            is not None
+        )
 
-        descriptor_str = Path("tests/descriptors/descriptor_storage_valid.yaml").read_text()
+        descriptor_str = Path(
+            "tests/descriptors/descriptor_storage_valid.yaml"
+        ).read_text()
         request = yaml.safe_load(descriptor_str)
         data_product = parse_yaml_with_model(request.get("dataProduct"), DataProduct)
         invalid_component_to_provision = request.get("componentIdToProvision")
 
-        with pytest.raises(pydantic_core.ValidationError, match="5 validation errors for OutputPort"):
-            data_product.get_typed_component_by_id(invalid_component_to_provision, OutputPort)
+        with pytest.raises(
+            pydantic_core.ValidationError, match="5 validation errors for OutputPort"
+        ):
+            data_product.get_typed_component_by_id(
+                invalid_component_to_provision, OutputPort
+            )

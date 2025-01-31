@@ -4,7 +4,7 @@ RUN apk update
 RUN apk upgrade --available && sync
 
 # Required system packages.
-RUN apk add --no-cache bash wget libc-dev ca-certificates gcc
+RUN apk add --no-cache bash wget libc-dev ca-certificates gcc unixodbc make g++ unixodbc-dev
 
 # Download and set up the Rust environment.
 # The default version available in the package manager contains several vulnerabilities!
